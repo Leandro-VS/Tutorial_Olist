@@ -25,7 +25,7 @@ SELECT T1.*,
         ELSE 'Ativo'
     END AS Segmento_vida,
 
-    '2018-06-01' AS dt_sgmt
+    '{date_end}' AS dt_sgmt
 
 
 FROM(
@@ -40,8 +40,8 @@ FROM(
                 COUNT(T1.order_id) AS qtde_pedidos,
                 COUNT(T2.product_id) AS qtde_produtos,
                 COUNT(DISTINCT T2.product_id) AS qtde_produtos_distinc,
-                MIN(CAST(julianday('2018-06-01') - julianday(T1.order_approved_at) AS INT)) AS dias_ultima_venda,
-                MAX(CAST(julianday('2018-06-01') - julianday(dt_inicio) AS INT)) AS qtd_dias_base
+                MIN(CAST(julianday('{date_end}') - julianday(T1.order_approved_at) AS INT)) AS dias_ultima_venda,
+                MAX(CAST(julianday('{date_end}') - julianday(dt_inicio) AS INT)) AS qtd_dias_base
 
         FROM tb_orders as T1
 
@@ -59,7 +59,7 @@ FROM(
             GROUP BY T2.seller_id
         ) AS T3
         ON T2.seller_id = T3.seller_id
-        WHERE T1.order_approved_at BETWEEN '2017-06-01' AND '2018-06-01'
+        WHERE T1.order_approved_at BETWEEN '{date_init}' AND '{date_end}'
 
         GROUP BY T2.seller_id
 
