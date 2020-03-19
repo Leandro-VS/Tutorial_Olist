@@ -17,9 +17,8 @@ str_conn = 'mysql+pymysql://{user}:{psw}@{host}:{port}'
 #Conexão com sqlite
 str_conn = 'sqlite:///{path}'
 
-
 ## Endereços do projeto
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 DATA_DIR = os.path.join(BASE_DIR, 'data')
 
 #Lendo os arquivos de dados .csv
