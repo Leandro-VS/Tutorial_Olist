@@ -3,6 +3,7 @@ import sqlalchemy
 import argparse
 import pandas as pd
 import datetime
+import utils
 
 ## Endereços do projeto
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -20,33 +21,12 @@ mes = int(date_end.split("-")[1])
 date_init = f"{ano}-{mes}-01"
 
 #Importando a query
-with open(os.path.join(SQL_DIR, 'segmentos.sql')) as query_file:
-    query = query_file.read()
-
-#print(query)
-
+query = utils.import_query(os.path.join(SQL_DIR, 'segmentos.sql'))
 query = query.format(date_init = date_init, 
                      date_end = date_end ) 
 
-#print(query)
-"""
-    #Conexão com sqlite
-    str_conn = 'sqlite:///{path}'
-    #Abrindo conexão com o db
-    str_conn = str_conn.format(path = os.path.join(DATA_DIR, 'olist.db'))
-    conn = sqlalchemy.create_engine(str_conn)
-
-    df = pd.read_sql_query(query, conn)
-    #O processo acima é valido porem leva problemas quando o banco é muito grande, pois estamos trazendo
-    #dados para o python, e isso não é recomendado.(a menos quando entrarmos na etapa de modelagem ML)
-"""
-#Forma alternativa
-
-str_conn = 'sqlite:///{path}'
-#Abrindo conexão com o db
-str_conn = str_conn.format(path = os.path.join(DATA_DIR, 'olist.db'))
-conn = sqlalchemy.create_engine(str_conn)
-
+#Abrindo conexão com o banco...
+conn = utils.connect_db()
 
 create_query = f'''
             CREATE TABLE tb_seller_sgmt AS {query}
@@ -58,7 +38,6 @@ insert_query = f'''
 ;'''
 
 try:
-    conn.execute(create_query)
+    utils.execute_many_sql(create_query, conn)
 except:
-    for q in insert_query.split(";")[:-1]:
-        conn.execute(q)
+    utils.execute_many_sql(insert_query, conn, verbose=True)
