@@ -3,7 +3,7 @@ import pandas as pd
 import sqlalchemy
 
 ## Endereços do projeto
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA_DIR = os.path.join(BASE_DIR, 'data')
 
 #Lendo os arquivos de dados .csv
@@ -17,6 +17,7 @@ conn = sqlalchemy.create_engine(str_conn)
 
 #Inserindo cada arquivo no db
 for i in files_names:
+    print(i)
     #dataframe temporario
     df_tmp = pd.read_csv(os.path.join(DATA_DIR, i))
     #Enviar o df para o DB

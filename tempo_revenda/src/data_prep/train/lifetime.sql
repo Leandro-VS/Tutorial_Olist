@@ -1,0 +1,27 @@
+SELECT *, 
+    julianday(DATE(order_approved_at)) - julianday(DATE(last_sale)) AS qtd_dias,
+    ROW_NUMBER() OVER(PARTITION BY seller_id, product_category_name ORDER BY RANDOM()) AS RANDOM
+FROM (
+
+    SELECT T2.seller_id,
+            T3.product_category_name,
+            T1.order_approved_at,
+            LAG(T1.order_approved_at) OVER(PARTITION BY T2.seller_id, T3.product_category_name ORDER BY T1.order_approved_at) AS last_sale
+
+    FROM tb_orders as T1
+
+    LEFT JOIN tb_order_items as T2
+    ON T1.order_id = T2.order_id
+
+    LEFT JOIN tb_products as T3
+    ON T2.product_id = T3.product_id
+
+    WHERE T2.seller_id IS NOT NULL
+    AND T3.product_category_name IS NOT NULL 
+
+    ORDER BY T2.seller_id, T1.order_approved_at
+
+) AS T1
+
+WHERE T1.last_sale IS NOT NULL 
+AND julianday(DATE(order_approved_at)) - julianday(DATE(last_sale)) >= 1

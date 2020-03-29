@@ -6,9 +6,9 @@ import datetime
 import utils
 
 ## Endereços do projeto
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+DATA_PREP_DIR = os.path.dirname(os.path.abspath(__file__))
+BASE_DIR = os.path.dirname(os.path.dirname(DATA_PREP_DIR))
 DATA_DIR = os.path.join(BASE_DIR, 'data')
-SQL_DIR = os.path.join(BASE_DIR, 'src', 'sql')
 
 #Parser de data para fazer a "foto"
 parser = argparse.ArgumentParser()
@@ -21,7 +21,7 @@ mes = int(date_end.split("-")[1])
 date_init = f"{ano}-{mes}-01"
 
 #Importando a query
-query = utils.import_query(os.path.join(SQL_DIR, 'segmentos.sql'))
+query = utils.import_query(os.path.join(DATA_PREP_DIR, 'segmentos.sql'))
 query = query.format(date_init = date_init, 
                      date_end = date_end ) 
 
